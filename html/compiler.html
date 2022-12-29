@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Compiler</title>
+</head>
+<body>
+    <script>
+        function none(){}
+        function tokenize(text, vars) {
+            text = text.split('')
+            var token = ''; // string
+            var tokens = []; // list of [number, string, string...]
+            var quotes = 0; // integer from 0 to 3
+            var esc = false; // boolean
+            var variable = ''
+            for(var ind = 0; ind < text.length; ind++) {
+                function checkChar(target, escape) {return text[ind] == target && !esc && !escape}
+                if(checkChar("'", quotes == 2)) {
+                    quotes = Math.abs(quotes - 1); // 0 -> 1, 1 -> 0
+                    tokens[tokens.length] = token;
+                    token = '';
+                }
+                else if(checkChar('"', quotes == 1)) {
+                    quotes = Math.abs(quotes - 1); // 0 -> 2, 2 -> 0
+                    tokens[tokens.length] = token;
+                    token = '';
+                }
+                else if(checkChar(' ', quotes != 0)) {
+                    tokens[tokens.length] = token;
+                    token = '';
+                }
+                else if(checkChar("$", quotes == 1)) {
+                    variable = '';
+                    for(ind++; ind in "ABCDEÉFGHIJKLMNÑOPQRSTUVWXYZabcdeéfghijkmnñopqrstuvwxyz-_".split(''); ind++) {
+                        variable += text[ind];
+                    }
+                    variable in vars ? token += vars[variable] : token += "$" + variable;
+                }
+                else {token += text[ind]}
+                if(esc || (!esc && text[ind] == "\\")) {esc = !esc}
+            }
+            tokens.push(token)
+            tokens.forEach(function (item) {item == "" ? delete tokens[tokens.indexOf(item)] : none()})
+            return tokens
+        }
+        // alert(tokenize("Hello World!"),{})
+        document.write(tokenize('Hello World!',{}) + " is the result")
+    </script>
+</body>
+</html>

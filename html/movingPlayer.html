@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Moving Player</title>
+    </head>
+    <body>
+        <canvas id="canvas" height="300" width="300"></canvas>
+        <script>
+            ctx = document.getElementById("canvas")
+            ctx = ctx.getContext("2d")
+            var player = {
+                x: 0,
+                y: 0,
+                move: function(keyPressed) {
+                    key = keyPressed.key
+                    if(key == "w" || key == "ArrowUp"){
+                        player.y -= 30
+                    }
+                    else {
+                        if(key == "a" || key == "ArrowLeft"){
+                            player.x -= 30
+                        }
+                        else {
+                            if(key == "s" || key == "ArrowDown"){
+                                player.y += 30
+                            }
+                            else {
+                                if(key == "d" || key == "ArrowRight"){
+                                    player.x += 30
+                                }
+                            }
+                        }
+                    }
+                },
+                update: function() {
+                    if(player.x > 270){
+                        player.x = 270
+                    }
+                    if(player.x < 0){
+                        player.x = 0
+                    }
+                    if(player.y > 270){
+                        player.y = 270
+                    }
+                    if(player.y < 0){
+                        player.y = 0
+                    }
+                    ctx.fillStyle = "#2022ff"
+                    ctx.clearRect(0,0,300,300)
+                    ctx.fillRect(player.x, player.y, 30, 30)
+                }
+            }
+            function handleKey(keyPressed){
+                player.move(keyPressed)
+                player.update()
+                // console.log(player.x + ", " + player.y + ", " + keyPressed.key)
+            }
+            window.addEventListener("keydown", handleKey, false)
+            ctx.fillRect(0,0,30,30)
+        </script>
+    </body>
+</html>

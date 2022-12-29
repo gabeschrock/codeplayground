@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Moving Player</title>
+    </head>
+    <body>
+        <p>Use arrow keys or WASD to move</p>
+        <canvas id="canvas" height="300" width="300"></canvas>
+        <script>
+            var game_complete
+            var game_over = false
+            var level_complete = false
+            var ctx = document.getElementById("canvas").getContext("2d")
+            var game = {
+                board: [
+                "##########",
+                "#        #",
+                "#        #",
+                "#        #",
+                "#        #",
+                "#        #",
+                "#        #",
+                "#        #",
+                "#        #",
+                "##########"],
+                drawBoard: function(fillStyle) {
+                    var yOffset = 0
+                    this.board.forEach(function (line) {
+                        var xOffset = 0
+                        line.split("").forEach(function (char) {
+                            if(char == "#") {
+                                ctx.fillStyle = fillStyle;
+                                ctx.fillRect(xOffset, yOffset, 30, 30);
+                            }
+                            xOffset += 30
+                        })
+                    yOffset += 30
+                    })
+                },
+                getSquare: function(x, y) {
+                    return this.board[y / 30].split("")[x / 30]
+                }
+            };
+            var player = {
+                x: 30,
+                y: 30,
+                oldX: 0,
+                oldY: 0,
+                move: function(key) {
+                    this.oldX = this.x
+                    this.oldY = this.y
+                    ctx.clearRect(this.x, this.y, 30, 30)
+                    if(key == "w" || key == "ArrowUp"){this.y -= 30}
+                    else if(key == "a" || key == "ArrowLeft") {this.x -= 30}
+                    else if(key == "s" || key == "ArrowDown") {this.y += 30}
+                    else if(key == "d" || key == "ArrowRight") {this.x += 30}
+                    if(game.getSquare(this.x, this.y) == "#") {
+                        this.x = this.oldX
+                        this.y = this.oldY
+                    }
+                    if(danger.getSquare(this.x, this.y) == "#") {
+                        game_over = true;
+                        alert("Game over!");
+                    }
+                    if(end.getSquare(this.x, this.y) == "#") {
+                        alert("Level complete!");
+                        game_complete = true;
+                        }
+                },
+                update: function() {
+                    if(this.x > 270){
+                        this.x = 270;
+                    }
+                    if(this.x < 0){
+                        this.x = 0;
+                    }
+                    if(this.y > 270){
+                        this.y = 270;
+                    }
+                    if(this.y < 0){
+                        this.y = 0;
+                    }
+                    ctx.fillStyle = "#2022ff"
+                    ctx.fillRect(this.x, this.y, 30, 30)
+                }
+            };
+            const player2 = {...player}
+            const danger = {...game}
+            const end = {...game}
+            danger.board = [
+                "          ",
+                "          ",
+                "          ",
+                "          ",
+                "          ",
+                "          ",
+                "          ",
+                "          ",
+                " #      # ",
+                "          ",
+            ]
+            end.board = [
+                "          ",
+                "          ",
+                "          ",
+                "          ",
+                "          ",
+                "     #    ",
+                "          ",
+                "          ",
+                "          ",
+                "          ",
+            ]
+            player2.x = 240
+            function handleKey(keyPressed){
+                if(game_over) {
+                    alert("Game over! Reload the page to play again.")
+                    }
+                else {
+                    player.move(keyPressed.key);
+                    if(player.x == player2.x && player.y == player2.y){
+                        player.x = player.oldX;
+                        player.y = player.oldY;
+                    }
+                    player2.move(keyPressed.key)
+                    if(player2.x == player.x && player2.y == player.y){
+                        player2.x = player2.oldX;
+                        player2.y = player2.oldY;
+                    }
+                    if(player.x == player.oldX && player.y == player.oldY){
+                        player.move(keyPressed.key);
+                        if(player.x == player2.x && player.y == player2.y){
+                            player.x = player.oldX;
+                            player.y = player.oldY;
+                        }
+                    }
+                game.drawBoard("#000000");
+                danger.drawBoard("#ff0000")
+                end.drawBoard("#20ff20")
+                }
+                game.drawBoard("#000000")
+                player.update()
+                player2.update()
+            };
+            window.addEventListener("keydown", handleKey, false);
+            var keys = [{key: "w"}, {key: "a"}, {key: "s"}, {key: "d"}, {key: null}]
+            handleKey(keys[4])
+        </script>
+    </body>
+</html>

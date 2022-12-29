@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body {
+                font-size: 20px;
+            }
+            a.math {
+                font-size: 18px;
+            }
+            span.power {
+                font-size: 12px;
+                bottom: 9px;
+                position: relative;
+            }
+        </style>
+        <script type="text/javascript">
+            function update(elem) {document.querySelector('span#eq2.math').innerHTML=elem.value}
+        </script>
+    </head>
+    <body>
+        <textarea onkeydown="update(this)"></textarea><br/>
+        My equation: <span class="math" id="eq1"></span>ln(<var>e</var><span class="power">Re(<var>x</var>)</span>) = Re(<var>x</var>)</span><br/>
+        Your equation: <span class="math" id="eq2"></span>
+    </body>
+</html>
