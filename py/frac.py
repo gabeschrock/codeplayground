@@ -1,10 +1,10 @@
 def fac(x: int) -> list:
-    # factors of x excluding 1
-	rtrn = []
-	for i in range(2, round(x) + 1):
-	    if round(x) / i == round(round(x) / i):
-            rtrn.append(i)
-	return rtrn
+    rtrn=[]
+    for i in range(2,x+1):
+        if type(x/i) == int:
+            rtrn.append(x)
+    return rtrn
+
 def common(a: list, b: list):
     # a and b have an item in common
     for i in a:

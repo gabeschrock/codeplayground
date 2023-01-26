@@ -5,7 +5,7 @@
             body {
                 font-size: 20px;
             }
-            a.math {
+            span.math {
                 font-size: 18px;
             }
             span.power {
@@ -15,7 +15,7 @@
             }
         </style>
         <script type="text/javascript">
-            function update(elem) {document.querySelector('span#eq2.math').innerHTML=elem.value}
+            function update(elem) {setTimeout(_=>{document.querySelector('span#eq2.math').innerHTML=elem.value}, 10)}
         </script>
     </head>
     <body>
