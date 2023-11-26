@@ -50,7 +50,7 @@ class node():
             prev = prev.next
         rtrn.append(prev.val)
         return rtrn
-class nodeStack():
+class NodeStack():
     def __init__(self):
         self._val = []
     def push(self, val):
@@ -75,8 +75,9 @@ class nodeStack():
         return rtrn
     def getList(self):
         return self.peek().getList()
-LIFO = nodeStack
-class FIFO():
+Lifo = NodeStack # last in, first out
+class Fifo():
+    # firs in, first out
     def __init__(self):
         self._val = []
     def push(self, val):
