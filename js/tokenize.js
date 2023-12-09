@@ -27,6 +27,15 @@ var tokenMap = {
     "!=": "NOT_EQ"
 };
 
+var escapeMap = {
+    "b": "\b",
+    "f": "\f",
+    "n": "\n",
+    "t": "\t",
+    "v": "\v",
+    "0": "\0"
+}
+
 class TokenizeError extends Error {
     constructor(message) {
         super(message);
@@ -34,7 +43,7 @@ class TokenizeError extends Error {
     }
 }
 
-function tokenize(str, tokenMap) {
+function tokenize(str, tokenMap, escapeMap) {
     var longestToken = 0;
     for (var token in tokenMap) {
         if (token.length > longestToken) {
@@ -61,10 +70,7 @@ function tokenize(str, tokenMap) {
     var token;
     var tokens = [];
 
-    
-
-    var index;
-    var quote;
+    var escape;
 
     while (str) {
         token = str[0];
@@ -93,6 +99,27 @@ function tokenize(str, tokenMap) {
             continue;
         }
 
+        if (token == "'" || token == '"') {
+            let quote = token;
+            token = "";
+
+            while (str[0] != quote && str) {
+                if (str[0] == "\\") {
+                    let esc = escapeMap[str[1]];
+                    if (esc) token += esc;
+                    else token += str[1];
+                    str = str.slice(2);
+                    continue;
+                }
+                token += str[0];
+                str = str.slice(1);
+            }
+            if (!str) throw new TokenizeError("unterminated string: '" + token)
+            str = str.slice(1);
+            tokens.push("STR " + token);
+            continue;
+        }
+
         token += str.slice(0, longestToken - 1);
         str = str.slice(longestToken - 1);
 
@@ -108,17 +135,18 @@ function tokenize(str, tokenMap) {
     return tokens;
 }
 
-var code = `
+var code = `\
 power = func(base, exp)
-    // raise one number to the power of another
+    local doc = 'raise one number to the power of another'
     local ret = base
     for i in 0 to exp-1 // repeat exp-1 times
         ret *= base
     end
 end
+foo = "abc\\a\\t\\""
 power(3, 10)`
 
-var tokens = tokenize(code, tokenMap)
+var tokens = tokenize(code, tokenMap, escapeMap)
 console.log(tokens)
 for (var index in tokens) {
     console.log(tokens[index])
