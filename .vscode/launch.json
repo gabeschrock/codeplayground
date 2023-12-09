@@ -11,7 +11,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/html/dodge/src/script.js"
+            "program": "${workspaceFolder}/js/tokenize.js"
         }
     ]
 }
