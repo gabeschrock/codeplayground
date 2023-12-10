@@ -106,8 +106,33 @@ function tokenize(str, tokenMap, escapeMap) {
             while (str[0] != quote && str) {
                 if (str[0] == "\\") {
                     let esc = escapeMap[str[1]];
-                    if (esc) token += esc;
-                    else token += str[1];
+                    if (esc) {
+                        token += esc;
+                        str = str.slice(2);
+                        continue;
+                    }
+                    if (str[1] == "x") { // this could be combined with the unicode escape code
+                        let err = new TokenizeError("Invalid hexadecimal escape: " + str.slice(0, 4))
+                        if (str.length < 4) throw err
+                        let charCode = parseInt(str.slice(2, 4), 16)
+                        if (Number.isNaN(charCode)) throw err
+                        token += String.fromCharCode(charCode)
+
+                        str = str.slice(4);
+                        continue;
+                    }
+                    
+                    if (str[1] == "u") {
+                        let err = new TokenizeError("Invalid hexadecimal escape: " + str.slice(0, 4))
+                        if (str.length < 6) throw err
+                        let charCode = parseInt(str.slice(2, 6), 16)
+                        if (Number.isNaN(charCode)) throw err
+                        token += String.fromCharCode(charCode)
+
+                        str = str.slice(6);
+                        continue;
+                    }
+                    token += str[1];
                     str = str.slice(2);
                     continue;
                 }
@@ -143,7 +168,6 @@ power = func(base, exp)
         ret *= base
     end
 end
-foo = "abc\\a\\t\\""
 power(3, 10)`
 
 var tokens = tokenize(code, tokenMap, escapeMap)
